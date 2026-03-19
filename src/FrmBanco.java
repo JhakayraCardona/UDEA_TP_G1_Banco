@@ -153,6 +153,7 @@ public class FrmBanco extends JFrame {
         // Agregar componentes
         pnlCuentas.add(pnlEditarCuenta);
         pnlCuentas.add(spListaCuentas);
+        
 
         // JScrollPane para permitir desplazamiento si es necesario
         JScrollPane spCuentas = new JScrollPane(pnlCuentas);
