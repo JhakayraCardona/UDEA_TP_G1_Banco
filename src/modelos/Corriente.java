@@ -36,4 +36,20 @@ public class Corriente extends Cuenta {
         };
     }
 
+    @Override
+    public String toString() {
+        return "Corriente [Numero=" + getNumero() + ", Titular=" + getTitular() + "]";
+    }
+
+    @Override
+    public boolean procesarTransaccion(TipoTransaccion tipo, double valor) {
+        switch (tipo) {
+            case DEPOSITO:
+                return depositar(valor);
+            case RETIRO:
+                return retirar(valor);
+        }
+        return false;
+    }
+
 }

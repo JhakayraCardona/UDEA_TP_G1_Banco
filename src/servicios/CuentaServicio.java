@@ -18,6 +18,13 @@ public class CuentaServicio {
 
     public static String[] encabezados = new String[] { "Tipo", "Número", "Titular", "Saldo", "Descripción" };
 
+    public static Cuenta getCuenta(int posicion) {
+        if (posicion >= 0 && posicion < cuentas.size()) {
+            return cuentas.get(posicion);
+        }
+        return null;
+    }
+
     public static void mostrar(JTable tbl) {
         String[][] datos = new String[cuentas.size()][encabezados.length];
 
@@ -56,6 +63,14 @@ public class CuentaServicio {
         }
         cuentas.add(cuenta);
         return cuenta;
+    }
+
+    public static boolean eliminar(int posicion) {
+        if (posicion >= 0 && posicion < cuentas.size()) {
+            cuentas.remove(posicion);
+            return true;
+        }
+        return false;
     }
 
 }
