@@ -2,7 +2,12 @@ package modelos;
 
 import java.text.DecimalFormat;
 
-public class Corriente extends Cuenta {
+import interfaces.IConsignable;
+import interfaces.IMostrable;
+import interfaces.IRetirable;
+import interfaces.ITransaccionable;
+
+public class Corriente extends Cuenta implements IConsignable, IRetirable, IMostrable, ITransaccionable {
 
     private double sobregiro;
 
@@ -16,8 +21,19 @@ public class Corriente extends Cuenta {
     }
 
     @Override
+    public boolean consignar(double cantidad) {
+        return depositar(cantidad);
+    }
+
+    @Override
+    public double getDisponibleRetiro() {
+        return getSaldo() + sobregiro;
+    }
+
+
+    @Override
     public boolean retirar(double valor) {
-        if (valor > 0 && valor <= getSaldo() + sobregiro) {
+        if (valor > 0 && valor <= getDisponibleRetiro()) {
             setSaldo(getSaldo() - valor);
             return true;
         }

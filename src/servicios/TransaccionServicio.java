@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import interfaces.ITransaccionable;
 import modelos.Cuenta;
 import modelos.TipoTransaccion;
 import modelos.Transaccion;
@@ -34,7 +35,7 @@ public class TransaccionServicio {
 
     public static Transaccion agregar(Cuenta cuenta, TipoTransaccion tipo, double valor) {
         Transaccion transaccion = null;
-        if (cuenta.procesarTransaccion(tipo, valor)) {
+        if (((ITransaccionable)cuenta).procesarTransaccion(tipo, valor)) {
             transaccion = new Transaccion(cuenta, tipo, valor, cuenta.getSaldoPorTransaccion(tipo));
             transacciones.add(transaccion);
         }

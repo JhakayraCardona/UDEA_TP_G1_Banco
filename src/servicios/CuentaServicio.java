@@ -6,9 +6,11 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import interfaces.IMostrable;
 import modelos.Ahorro;
 import modelos.Corriente;
 import modelos.Credito;
+import modelos.CreditoRotativo;
 import modelos.Cuenta;
 import modelos.TipoCuenta;
 
@@ -31,7 +33,7 @@ public class CuentaServicio {
         int fila = 0;
         for (Cuenta cuenta : cuentas) {
             int columna = 0;
-            for (String dato : cuenta.getDatos()) {
+            for (String dato : ((IMostrable)cuenta).getDatos()) {
                 datos[fila][columna] = dato;
                 columna++;
             }
@@ -59,6 +61,9 @@ public class CuentaServicio {
                 break;
             case CREDITO:
                 cuenta = new Credito(titular, numero, valorPrestado, tasaInteres, plazo);
+                break;
+            case CREDITO_ROTATIVO:
+                cuenta = new CreditoRotativo(titular, numero, valorPrestado, tasaInteres, plazo);
                 break;
         }
         cuentas.add(cuenta);

@@ -1,6 +1,6 @@
 package modelos;
 
-public abstract class Cuenta {
+public class Cuenta {
 
     private String titular;
     private String numero;
@@ -28,8 +28,6 @@ public abstract class Cuenta {
         this.saldo = saldo;
     }
 
-    public abstract boolean retirar(double valor);
-
     public boolean depositar(double valor) {
         if (valor > 0) {
             setSaldo(saldo + valor);
@@ -37,10 +35,6 @@ public abstract class Cuenta {
         }
         return false;
     }
-
-    public abstract String[] getDatos();
-
-    public abstract boolean procesarTransaccion(TipoTransaccion tipo, double valor);
 
     public double getSaldoPorTransaccion(TipoTransaccion tipo) {
         return saldo;

@@ -18,7 +18,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
-import javax.swing.table.DefaultTableModel;
 
 import modelos.TipoCuenta;
 import modelos.TipoTransaccion;
@@ -127,7 +126,7 @@ public class FrmBanco extends JFrame {
                     lblPlazo.setVisible(false);
                     txtPlazo.setVisible(false);
                     break;
-                case CREDITO:
+                case CREDITO, CREDITO_ROTATIVO:
                     lblValor.setVisible(true);
                     lblValor.setText("Valor Prestado:");
                     txtValor.setVisible(true);
@@ -288,12 +287,19 @@ public class FrmBanco extends JFrame {
                 txtTitular.getText(),
                 txtNumero.getText(),
                 tipo == TipoCuenta.CORRIENTE ? Double.parseDouble(txtValor.getText()) : 0,
-                tipo == TipoCuenta.AHORROS || tipo == TipoCuenta.CREDITO ? Double.parseDouble(txtTasa.getText()) : 0,
-                tipo == TipoCuenta.CREDITO ? Double.parseDouble(txtValor.getText()) : 0,
-                tipo == TipoCuenta.CREDITO ? Integer.parseInt(txtPlazo.getText()) : 0);
-        CuentaServicio.mostrar(tblCuentas);
-        cmbCuenta.addItem(cuentaAgregada.toString());
-        pnlEditarCuenta.setVisible(false);
+                tipo == TipoCuenta.AHORROS || tipo == TipoCuenta.CREDITO || tipo == TipoCuenta.CREDITO_ROTATIVO
+                        ? Double.parseDouble(txtTasa.getText())
+                        : 0,
+                tipo == TipoCuenta.CREDITO || tipo == TipoCuenta.CREDITO_ROTATIVO
+                        ? Double.parseDouble(txtValor.getText())
+                        : 0,
+                tipo == TipoCuenta.CREDITO || tipo == TipoCuenta.CREDITO_ROTATIVO ? Integer.parseInt(txtPlazo.getText())
+                        : 0);
+        if (cuentaAgregada != null) {
+            CuentaServicio.mostrar(tblCuentas);
+            cmbCuenta.addItem(cuentaAgregada.toString());
+            pnlEditarCuenta.setVisible(false);
+        }
 
     }
 
@@ -310,7 +316,7 @@ public class FrmBanco extends JFrame {
 
     private void btnGuardarTransaccionClick() {
         double valor = Double.parseDouble(txtValorTransaccion.getText());
-        if (valor > 0 && cmbCuenta.getSelectedIndex() >= 0 && cmbTipoTransaccion.getSelectedIndex() >= 0){
+        if (valor > 0 && cmbCuenta.getSelectedIndex() >= 0 && cmbTipoTransaccion.getSelectedIndex() >= 0) {
             var transaccionAgregada = TransaccionServicio.agregar(
                     CuentaServicio.getCuenta(cmbCuenta.getSelectedIndex()),
                     (TipoTransaccion) cmbTipoTransaccion.getSelectedItem(),
@@ -318,12 +324,10 @@ public class FrmBanco extends JFrame {
             if (transaccionAgregada != null) {
                 TransaccionServicio.mostrar(tblTransacciones);
                 pnlEditarTransaccion.setVisible(false);
-            }
-            else {
+            } else {
                 JOptionPane.showMessageDialog(null, "No se pudo realizar la transacción");
             }
-        }
-        else{
+        } else {
             JOptionPane.showMessageDialog(null, "Debe ingresar un valor positivo y seleccionar una cuenta");
         }
 

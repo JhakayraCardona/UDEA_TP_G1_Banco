@@ -2,7 +2,12 @@ package modelos;
 
 import java.text.DecimalFormat;
 
-public class Credito extends Cuenta {
+import interfaces.IMostrable;
+import interfaces.IPagable;
+import interfaces.IRetirable;
+import interfaces.ITransaccionable;
+
+public class Credito extends Cuenta implements IPagable, IRetirable, IMostrable, ITransaccionable {
 
     private double valorPrestado;
     private double tasaInteres;
@@ -33,28 +38,32 @@ public class Credito extends Cuenta {
         return valorRetirado;
     }
 
-    public double getDisponible() {
+    @Override
+    public double getDisponibleRetiro() {
         return valorPrestado - valorRetirado;
-    }
-
-    public double getSaldoDeuda() {
-        return valorPrestado - getSaldo();
     }
 
     @Override
     public boolean retirar(double valor) {
-        if (valor > 0 && valor <= getDisponible()) {
+        if (valor > 0 && valor <= getDisponibleRetiro()) {
             valorRetirado += valor;
             return true;
         }
         return false;
     }
 
+    @Override
+    public double getSaldoDeuda() {
+        return valorPrestado - getSaldo();
+    }
+
+    @Override
     public double getCuota() {
         double tasaReal = tasaInteres / 100;
         return valorPrestado * Math.pow(1 + tasaReal, plazo) * tasaReal / (Math.pow(1 + tasaReal, plazo) - 1);
     }
 
+    @Override
     public boolean pagar(double valor) {
         if (valor > 0 && getSaldoDeuda() > 0) {
             var intereses = getSaldoDeuda() * tasaInteres / 100;
@@ -71,8 +80,10 @@ public class Credito extends Cuenta {
                 "Crédito",
                 getNumero(),
                 getTitular(),
-                "Saldo Adeudado $"+df.format(getSaldoDeuda())+" Saldo Pagado $ "+df.format(getSaldo())+" Disponible Retiro $"+df.format(getDisponible()),
-                "Valor Préstamo $"+df.format(valorPrestado)+" Tasa Interés " + df.format(tasaInteres) + "% Plazo"+df.format(plazo)+" Cuota $"+df.format(getCuota())
+                "Saldo Adeudado $" + df.format(getSaldoDeuda()) + " Saldo Pagado $ " + df.format(getSaldo())
+                        + " Disponible Retiro $" + df.format(getDisponibleRetiro()),
+                "Valor Préstamo $" + df.format(valorPrestado) + " Tasa Interés " + df.format(tasaInteres) + "% Plazo"
+                        + df.format(plazo) + " Cuota $" + df.format(getCuota())
         };
     }
 
@@ -94,7 +105,7 @@ public class Credito extends Cuenta {
 
     @Override
     public double getSaldoPorTransaccion(TipoTransaccion tipo) {
-        return tipo==TipoTransaccion.RETIRO?getDisponible():getSaldoDeuda();
+        return tipo == TipoTransaccion.RETIRO ? getDisponibleRetiro() : getSaldoDeuda();
     }
 
 }
